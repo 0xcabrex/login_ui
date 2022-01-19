@@ -63,6 +63,12 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _isObscure = true;
   bool _isVisible = false;
 
+  fetchCredentials() {
+    var username = "username";
+    var password = "password123";
+    return [username, password];
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -186,8 +192,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     if (kDebugMode) {
                       print(
                           "Username: ${usernameController.text}, password: ${passwordController.text}");
-                      if (usernameController.text == "username" &&
-                          passwordController.text == "password123") {
+                      if (usernameController.text == fetchCredentials()[0] &&
+                          passwordController.text == fetchCredentials()[1]) {
                         Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(builder: (context) => HomePage()),
