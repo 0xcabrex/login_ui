@@ -20,15 +20,15 @@ They are case sensitive.
 
 ### Entering wrong credentials
 
-<p align="left"><img src="https://github.com/0xcabrex/login_ui/blob/master/github_assets/wrong_creds.jpg" /></p>
+<p align="left"><img src="https://github.com/0xcabrex/login_ui/blob/master/github_assets/wrong_creds.jpg" width="270" height="585"/></p>
 
 ### Right Credentials
 
-<p align="left"><img src="https://github.com/0xcabrex/login_ui/blob/master/github_assets/right_creds.jpg" /></p>
+<p align="left"><img src="https://github.com/0xcabrex/login_ui/blob/master/github_assets/right_creds.jpg" width="270" height="585"/></p>
 
 ### Successful login
 
-<p align="left"><img src="https://github.com/0xcabrex/login_ui/blob/master/github_assets/successful_login.jpg" /></p>
+<p align="left"><img src="https://github.com/0xcabrex/login_ui/blob/master/github_assets/successful_login.jpg" width="270" height="585"/></p>
 
 The "Sucessful Login" page is just a placeholder to demonstrate the `MaterialPageRoute` function.
 
