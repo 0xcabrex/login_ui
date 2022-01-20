@@ -16,7 +16,7 @@ They are case sensitive.
 
 ### Landing Page
 
-<p align="left"><img src="https://github.com/0xcabrex/login_ui/blob/master/github_assets/wrong_creds.jpg" width="270" height="585"/></p>
+<p align="left"><img src="https://github.com/0xcabrex/login_ui/blob/master/github_assets/ui.jpg" width="270" height="585"/></p>
 
 ### Entering wrong credentials
 
