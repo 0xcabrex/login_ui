@@ -192,18 +192,18 @@ class _LoginScreenState extends State<LoginScreen> {
                     if (kDebugMode) {
                       print(
                           "Username: ${usernameController.text}, password: ${passwordController.text}");
-                      if (usernameController.text == fetchCredentials()[0] &&
-                          passwordController.text == fetchCredentials()[1]) {
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(builder: (context) => HomePage()),
-                          (Route<dynamic> route) => false,
-                        );
-                      } else {
-                        setState(() {
-                          _isVisible = true;
-                        });
-                      }
+                    }
+                    if (usernameController.text == fetchCredentials()[0] &&
+                        passwordController.text == fetchCredentials()[1]) {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(builder: (context) => HomePage()),
+                        (Route<dynamic> route) => false,
+                      );
+                    } else {
+                      setState(() {
+                        _isVisible = true;
+                      });
                     }
                   }),
             ),
@@ -213,6 +213,8 @@ class _LoginScreenState extends State<LoginScreen> {
 }
 
 class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
+
   @override
   _HomePageState createState() => _HomePageState();
 }
