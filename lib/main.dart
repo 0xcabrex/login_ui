@@ -529,10 +529,10 @@ class _SignupPageContent extends State<SignupPageContent> {
                     print(
                         "Username: ${usernameController.text}\npassword: ${passwordController1.text}\nretry password ${passwordController2.text}");
                   }
-                  if (passwordController1.text == passwordController2.text &&
+                  if (usernameController.text != "" &&
+                      passwordController1.text == passwordController2.text &&
                       passwordController2.text != "" &&
-                      isPasswordCompliant(passwordController1.text) &&
-                      usernameController != "") {
+                      isPasswordCompliant(passwordController1.text)) {
                     if (kDebugMode) {
                       print("Es");
                     }
