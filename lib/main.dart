@@ -47,7 +47,7 @@ class MyApp extends StatelessWidget {
             child: Container(
               padding: EdgeInsets.all(20),
               child: Text(
-                "Apple Developers' Group, PESU",
+                "Company name, Inc",
                 style: TextStyle(color: Colors.white),
                 textAlign: TextAlign.center,
               ),
@@ -327,7 +327,7 @@ class _SignupPage extends State<SignupPage> {
           child: Container(
             padding: EdgeInsets.all(20),
             child: Text(
-              "Apple Developers' Group, PESU",
+              "Company name, Inc",
               style: TextStyle(color: Colors.white),
               textAlign: TextAlign.center,
             ),
@@ -396,10 +396,16 @@ class _SignupPageContent extends State<SignupPageContent> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
+          // Sized Box
+          SizedBox(
+            height: 37.5,
+            width: 400,
+          ),
+
           // Signup Text
           Center(
             child: Container(
-              height: 320,
+              height: 245,
               width: 400,
               alignment: Alignment.center,
               child: Text(

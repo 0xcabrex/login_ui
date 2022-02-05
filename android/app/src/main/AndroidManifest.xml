@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.cabrex.interactive_ui_login">
    <application
-        android:label="Social Media App"
+        android:label="Login/Signup Demo"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
