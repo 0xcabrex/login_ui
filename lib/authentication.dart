@@ -14,6 +14,16 @@ class Authentication {
     return false;
   }
 
+  bool checkUserRepeat(username) {
+    for (var j = 0; j < _username.length; j++) {
+      if (username == _username[j]) {
+        print(username);
+        return true;
+      }
+    }
+    return false;
+  }
+
   void insertCredentials(username, password) {
     _username.add(username);
     _password.add(password);

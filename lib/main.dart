@@ -328,7 +328,7 @@ class _SignupPageContent extends State<SignupPageContent> {
     if (password1 != password2) {
       returnVisibilityString = "Passwords do not match";
     } else if (username == "") {
-      returnVisibilityString = "username cannot be empty";
+      returnVisibilityString = "Username cannot be empty";
     } else if (password1 == "" || password2 == "") {
       returnVisibilityString = "Password fields cant be empty";
     } else if (!auth.isPasswordCompliant(password1)) {
@@ -489,13 +489,21 @@ class _SignupPageContent extends State<SignupPageContent> {
                       passwordController1.text == passwordController2.text &&
                       passwordController2.text != "" &&
                       auth.isPasswordCompliant(passwordController1.text)) {
-                    auth.insertCredentials(
-                        usernameController.text, passwordController1.text);
+                    print("I got in here");
+                    if (!auth.checkUserRepeat(usernameController.text)) {
+                      auth.insertCredentials(
+                          usernameController.text, passwordController1.text);
 
-                    Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(builder: (context) => MyApp()),
-                      (Route<dynamic> route) => false,
-                    );
+                      Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(builder: (context) => MyApp()),
+                        (Route<dynamic> route) => false,
+                      );
+                    } else {
+                      setState(() {
+                        returnVisibilityString = "Username already exists";
+                        _isVisible = true;
+                      });
+                    }
                   } else {
                     setState(() {
                       _isVisible = returnVisibility(passwordController1.text,
