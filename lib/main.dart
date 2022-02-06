@@ -1,16 +1,12 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
-// import 'dart:html';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'authentication.dart';
 import 'package:flutter/services.dart';
 
-// Global Variables
-var _username = ["username"];
-var _password = ["password123"];
-int _i = 1;
+final auth = Authentication();
 
 void main() {
   runApp(const MyApp());
@@ -25,15 +21,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Login Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
         primarySwatch: Colors.blue,
         fontFamily: 'SanFrancisco',
       ),
@@ -76,15 +63,6 @@ class _LoginScreenState extends State<LoginScreen> {
         print("Hello world from _gestureRecognizer");
       }
     };
-
-  bool fetchCredentials(String username, String password) {
-    for (var j = 0; j < _username.length; j++) {
-      if (username == _username[j] && password == _password[j]) {
-        return true;
-      }
-    }
-    return false;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -206,11 +184,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30)),
                   onPressed: () {
-                    if (kDebugMode) {
-                      print(
-                          "Username: ${usernameController.text}, password: ${passwordController.text}");
-                    }
-                    if (fetchCredentials(
+                    if (auth.fetchCredentials(
                         usernameController.text, passwordController.text)) {
                       Navigator.pushAndRemoveUntil(
                         context,
@@ -350,25 +324,6 @@ class _SignupPageContent extends State<SignupPageContent> {
   bool _isObscure2 = true;
   String returnVisibilityString = "";
 
-  bool isPasswordCompliant(String password, [int minLength = 6]) {
-    if (password == null || password.isEmpty) {
-      return false;
-    }
-
-    bool hasUppercase = password.contains(new RegExp(r'[A-Z]'));
-    bool hasDigits = password.contains(new RegExp(r'[0-9]'));
-    bool hasLowercase = password.contains(new RegExp(r'[a-z]'));
-    bool hasSpecialCharacters =
-        password.contains(new RegExp(r'[!@#$%^&*(),.?":{}|<>]'));
-    bool hasMinLength = password.length > minLength;
-
-    return hasDigits &
-        hasUppercase &
-        hasLowercase &
-        hasSpecialCharacters &
-        hasMinLength;
-  }
-
   bool returnVisibility(String password1, String password2, String username) {
     if (password1 != password2) {
       returnVisibilityString = "Passwords do not match";
@@ -376,16 +331,10 @@ class _SignupPageContent extends State<SignupPageContent> {
       returnVisibilityString = "username cannot be empty";
     } else if (password1 == "" || password2 == "") {
       returnVisibilityString = "Password fields cant be empty";
-    } else if (!isPasswordCompliant(password1)) {
+    } else if (!auth.isPasswordCompliant(password1)) {
       returnVisibilityString = "Not password compliant";
     }
     return true;
-  }
-
-  void signup(username, password) {
-    _username.add(usernameController.text);
-    _password.add(passwordController1.text);
-    _i++;
   }
 
   @override
@@ -530,25 +479,20 @@ class _SignupPageContent extends State<SignupPageContent> {
                 child: Text("Submit", style: TextStyle(color: Colors.white)),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30)),
-                onPressed: () {
+                onPressed: () async {
                   if (kDebugMode) {
                     print(
                         "Username: ${usernameController.text}\npassword: ${passwordController1.text}\nretry password ${passwordController2.text}");
                   }
+
                   if (usernameController.text != "" &&
                       passwordController1.text == passwordController2.text &&
                       passwordController2.text != "" &&
-                      isPasswordCompliant(passwordController1.text)) {
-                    if (kDebugMode) {
-                      print("Es");
-                    }
-                    signup(usernameController.text, passwordController1.text);
-                    if (kDebugMode) {
-                      print(
-                          "username: ${_username[_i - 1]}, password: ${_password[_i - 1]}");
-                    }
-                    Navigator.pushAndRemoveUntil(
-                      context,
+                      auth.isPasswordCompliant(passwordController1.text)) {
+                    auth.insertCredentials(
+                        usernameController.text, passwordController1.text);
+
+                    Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(builder: (context) => MyApp()),
                       (Route<dynamic> route) => false,
                     );
@@ -557,9 +501,6 @@ class _SignupPageContent extends State<SignupPageContent> {
                       _isVisible = returnVisibility(passwordController1.text,
                           passwordController2.text, usernameController.text);
                     });
-                    if (kDebugMode) {
-                      print("not es");
-                    }
                   }
                 }),
           ),
