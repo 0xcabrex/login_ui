@@ -1,72 +1,38 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, prefer_final_fields, use_key_in_widget_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
 import 'authentication.dart';
-import 'package:flutter/services.dart';
 
 final auth = Authentication();
 
-void main() {
-  runApp(const MyApp());
-}
+void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Login Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        fontFamily: 'SanFrancisco',
-      ),
-      home: Scaffold(
-        resizeToAvoidBottomInset: true,
-        backgroundColor: const Color.fromRGBO(40, 38, 56, 1),
-        body: LoginScreen(),
-        bottomNavigationBar: BottomAppBar(
-            color: Colors.transparent,
-            elevation: 0,
-            child: Container(
-              padding: EdgeInsets.all(20),
-              child: Text(
-                "Company name, Inc",
-                style: TextStyle(color: Colors.white),
-                textAlign: TextAlign.center,
-              ),
-            )),
-      ),
-    );
+    return GetMaterialApp(
+        title: 'Login Demo',
+        defaultTransition: Transition.rightToLeft,
+        home: LoginScreen());
   }
 }
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
-
-  @override
-  _LoginScreenState createState() => _LoginScreenState();
-}
-
-class _LoginScreenState extends State<LoginScreen> {
+class LoginScreen extends StatelessWidget {
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  bool _isObscure = true;
-  bool _isVisible = false;
-
-  final TapGestureRecognizer _gestureRecognizer = TapGestureRecognizer()
-    ..onTap = () {
-      if (kDebugMode) {
-        print("Hello world from _gestureRecognizer");
-      }
-    };
+  var _isObscure = true.obs;
+  var _isVisible = false.obs;
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
+    return Scaffold(
+      resizeToAvoidBottomInset: true,
+      backgroundColor: const Color.fromRGBO(40, 38, 56, 1),
+      body: SingleChildScrollView(
         reverse: true,
         padding: EdgeInsets.all(20),
         child: Column(
@@ -101,75 +67,73 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
 
             // Wrong Password text
-            Visibility(
-              visible: _isVisible,
-              maintainSize: true,
-              maintainAnimation: true,
-              maintainState: true,
-              child: Container(
-                alignment: Alignment.centerLeft,
-                padding: EdgeInsets.all(10),
-                child: Text(
-                  "Wrong credentials entered",
-                  style: TextStyle(
-                    color: Colors.red,
-                    fontSize: 10,
+            Obx(
+              () => Visibility(
+                visible: _isVisible.value,
+                maintainSize: true,
+                maintainAnimation: true,
+                maintainState: true,
+                child: Container(
+                  alignment: Alignment.centerLeft,
+                  padding: EdgeInsets.all(10),
+                  child: Text(
+                    "Wrong credentials entered",
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontSize: 10,
+                    ),
                   ),
                 ),
               ),
             ),
 
             // Textfields for username and password fields
-            Container(
-              height: 140,
-              width: 530,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(20)),
-                  color: Colors.white),
-              child: Column(
-                children: <Widget>[
-                  TextFormField(
-                    onTap: () {
-                      setState(() {
-                        _isVisible = false;
-                      });
-                    },
-                    controller: usernameController, // Controller for Username
-                    decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: "Username",
-                        contentPadding: EdgeInsets.all(20)),
-                    onEditingComplete: () => FocusScope.of(context).nextFocus(),
-                  ),
-                  Divider(
-                    thickness: 3,
-                  ),
-                  TextFormField(
-                    onTap: () {
-                      setState(() {
-                        _isVisible = false;
-                      });
-                    },
-
-                    controller: passwordController, // Controller for Password
-                    decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: "Password",
-                        contentPadding: EdgeInsets.all(20),
-                        // Adding the visibility icon to toggle visibility of the password field
-                        suffixIcon: IconButton(
-                          icon: Icon(_isObscure
-                              ? Icons.visibility_off
-                              : Icons.visibility),
-                          onPressed: () {
-                            setState(() {
-                              _isObscure = !_isObscure;
-                            });
-                          },
-                        )),
-                    obscureText: _isObscure,
-                  ),
-                ],
+            Obx(
+              () => Container(
+                height: 140,
+                width: 530,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                    color: Colors.white),
+                child: Column(
+                  children: <Widget>[
+                    TextFormField(
+                      onTap: () {
+                        _isVisible.value = false;
+                      },
+                      controller: usernameController, // Controller for Username
+                      decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: "Username",
+                          contentPadding: EdgeInsets.all(20)),
+                      onEditingComplete: () =>
+                          FocusScope.of(context).nextFocus(),
+                    ),
+                    Divider(
+                      thickness: 3,
+                    ),
+                    TextFormField(
+                        onTap: () {
+                          _isVisible.value = false;
+                        },
+                        controller:
+                            passwordController, // Controller for Password
+                        decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: "Password",
+                            contentPadding: EdgeInsets.all(20),
+                            // Adding the visibility icon to toggle visibility of the password field
+                            suffixIcon: IconButton(
+                              icon: Icon(_isObscure.value
+                                  ? Icons.visibility_off
+                                  : Icons.visibility),
+                              onPressed: () {
+                                _isObscure.value = !(_isObscure.value);
+                              },
+                            )),
+                        obscureText: _isObscure.value),
+                  ],
+                ),
               ),
             ),
 
@@ -186,15 +150,14 @@ class _LoginScreenState extends State<LoginScreen> {
                   onPressed: () {
                     if (auth.fetchCredentials(
                         usernameController.text, passwordController.text)) {
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(builder: (context) => HomePage()),
-                        (Route<dynamic> route) => false,
-                      );
+                      // Navigator.pushAndRemoveUntil(
+                      //   context,
+                      //   MaterialPageRoute(builder: (context) => HomePage()),
+                      //   (Route<dynamic> route) => false,
+                      // );
+                      Get.off(HomePage());
                     } else {
-                      setState(() {
-                        _isVisible = true;
-                      });
+                      _isVisible.value = true;
                     }
                   }),
             ),
@@ -216,79 +179,70 @@ class _LoginScreenState extends State<LoginScreen> {
                           style: TextStyle(
                               color: Colors.blue, fontWeight: FontWeight.bold),
                           recognizer: new TapGestureRecognizer()
-                            ..onTap = () => {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => SignupPage()),
-                                  )
-                                }),
+                            ..onTap = () => {Get.to(SignupPage())}),
                     ],
                   ),
                 )))
           ],
-        ));
+        ),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        color: Colors.transparent,
+        elevation: 0,
+        child: Container(
+          padding: EdgeInsets.all(20),
+          child: Text(
+            "Company name, Inc",
+            style: TextStyle(color: Colors.white),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ),
+    );
   }
 }
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
-
-  @override
-  _HomePageState createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
+class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        resizeToAvoidBottomInset: true,
-        backgroundColor: const Color.fromRGBO(40, 38, 56, 1),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Center(
-              child: Container(
-                  height: 400,
-                  width: 200,
-                  padding: EdgeInsets.all(20),
-                  alignment: Alignment.center,
-                  child: Text(
-                    "Successfull login!",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.white, fontSize: 25),
-                  )),
-            ),
-            Container(
-              height: 100,
-              width: 570,
-              padding: EdgeInsets.all(20),
-              child: RaisedButton(
-                  color: Colors.pink,
-                  child: Text("Logout", style: TextStyle(color: Colors.white)),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30)),
-                  onPressed: () {
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(builder: (context) => MyApp()),
-                      (Route<dynamic> route) => false,
-                    );
-                  }),
-            )
-          ],
-        ));
+      resizeToAvoidBottomInset: true,
+      backgroundColor: const Color.fromRGBO(40, 38, 56, 1),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Center(
+            child: Container(
+                height: 400,
+                width: 200,
+                padding: EdgeInsets.all(20),
+                alignment: Alignment.center,
+                child: Text(
+                  "Successfull login!",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.white, fontSize: 25),
+                )),
+          ),
+          Container(
+            height: 100,
+            width: 570,
+            padding: EdgeInsets.all(20),
+            child: RaisedButton(
+                color: Colors.pink,
+                child: Text("Logout", style: TextStyle(color: Colors.white)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30)),
+                onPressed: () {
+                  Get.off(LoginScreen());
+                }),
+          )
+        ],
+      ),
+    );
   }
 }
 
-class SignupPage extends StatefulWidget {
-  const SignupPage({Key? key}) : super(key: key);
-
-  @override
-  State<StatefulWidget> createState() => _SignupPage();
-}
-
-class _SignupPage extends State<SignupPage> {
+class SignupPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -307,32 +261,28 @@ class _SignupPage extends State<SignupPage> {
             ),
           )),
     );
+    ;
   }
 }
 
-class SignupPageContent extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => _SignupPageContent();
-}
-
-class _SignupPageContent extends State<SignupPageContent> {
+class SignupPageContent extends StatelessWidget {
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController1 = TextEditingController();
   TextEditingController passwordController2 = TextEditingController();
-  bool _isVisible = false;
-  bool _isObscure1 = true;
-  bool _isObscure2 = true;
-  String returnVisibilityString = "";
+  var _isVisible = false.obs;
+  var _isObscure1 = true.obs;
+  var _isObscure2 = true.obs;
+  var returnVisibilityString = "".obs;
 
   bool returnVisibility(String password1, String password2, String username) {
     if (password1 != password2) {
-      returnVisibilityString = "Passwords do not match";
+      returnVisibilityString.value = "Passwords do not match";
     } else if (username == "") {
-      returnVisibilityString = "Username cannot be empty";
+      returnVisibilityString.value = "Username cannot be empty";
     } else if (password1 == "" || password2 == "") {
-      returnVisibilityString = "Password fields cant be empty";
+      returnVisibilityString.value = "Password fields cant be empty";
     } else if (!auth.isPasswordCompliant(password1)) {
-      returnVisibilityString = "Not password compliant";
+      returnVisibilityString.value = "Not password compliant";
     }
     return true;
   }
@@ -369,103 +319,97 @@ class _SignupPageContent extends State<SignupPageContent> {
           ),
 
           // Wrong password text
-          Visibility(
-            visible: _isVisible,
-            maintainSize: true,
-            maintainAnimation: true,
-            maintainState: true,
-            child: Container(
-              alignment: Alignment.centerLeft,
-              padding: EdgeInsets.all(10),
-              child: Text(
-                returnVisibilityString,
-                style: TextStyle(
-                  color: Colors.red,
-                  fontSize: 10,
+          Obx(
+            () => Visibility(
+              visible: _isVisible.value,
+              maintainSize: true,
+              maintainAnimation: true,
+              maintainState: true,
+              child: Container(
+                alignment: Alignment.centerLeft,
+                padding: EdgeInsets.all(10),
+                child: Text(
+                  returnVisibilityString.value,
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontSize: 10,
+                  ),
                 ),
               ),
             ),
           ),
 
           // Signup Info
-          Container(
-            height: 215,
-            width: 530,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(20)),
-                color: Colors.white),
-            child: Column(
-              children: <Widget>[
-                TextFormField(
-                  onTap: () {
-                    setState(() {
-                      _isVisible = false;
-                    });
-                  },
-                  controller: usernameController, // Controller for Username
-                  decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: "Username",
-                      contentPadding: EdgeInsets.all(20)),
-                  onEditingComplete: () => FocusScope.of(context).nextFocus(),
-                ),
-                Divider(
-                  thickness: 3,
-                ),
-                TextFormField(
-                  onTap: () {
-                    setState(() {
-                      _isVisible = false;
-                    });
-                  },
+          Obx(
+            () => Container(
+              height: 215,
+              width: 530,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                  color: Colors.white),
+              child: Column(
+                children: <Widget>[
+                  TextFormField(
+                    onTap: () {
+                      _isVisible.value = false;
+                    },
+                    controller: usernameController, // Controller for Username
+                    decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: "Username",
+                        contentPadding: EdgeInsets.all(20)),
+                    onEditingComplete: () => FocusScope.of(context).nextFocus(),
+                  ),
+                  Divider(
+                    thickness: 3,
+                  ),
+                  TextFormField(
+                    onTap: () {
+                      _isVisible.value = false;
+                    },
 
-                  controller: passwordController1, // Controller for Password
-                  decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: "Password",
-                      contentPadding: EdgeInsets.all(20),
-                      // Adding the visibility icon to toggle visibility of the password field
-                      suffixIcon: IconButton(
-                        icon: Icon(_isObscure1
-                            ? Icons.visibility_off
-                            : Icons.visibility),
-                        onPressed: () {
-                          setState(() {
-                            _isObscure1 = !_isObscure1;
-                          });
-                        },
-                      )),
-                  obscureText: _isObscure1,
-                ),
-                Divider(
-                  thickness: 3,
-                ),
-                TextFormField(
-                  onTap: () {
-                    setState(() {
-                      _isVisible = false;
-                    });
-                  },
+                    controller: passwordController1, // Controller for Password
+                    decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: "Password",
+                        contentPadding: EdgeInsets.all(20),
+                        // Adding the visibility icon to toggle visibility of the password field
+                        suffixIcon: IconButton(
+                          icon: Icon(_isObscure1.value
+                              ? Icons.visibility_off
+                              : Icons.visibility),
+                          onPressed: () {
+                            _isObscure1.value = !_isObscure1.value;
+                          },
+                        )),
+                    obscureText: _isObscure1.value,
+                  ),
+                  Divider(
+                    thickness: 3,
+                  ),
+                  TextFormField(
+                    onTap: () {
+                      _isVisible.value = false;
+                    },
 
-                  controller: passwordController2, // Controller for Password
-                  decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: "Re-enter Password",
-                      contentPadding: EdgeInsets.all(20),
-                      // Adding the visibility icon to toggle visibility of the password field
-                      suffixIcon: IconButton(
-                        icon: Icon(_isObscure2
-                            ? Icons.visibility_off
-                            : Icons.visibility),
-                        onPressed: () {
-                          setState(() {
-                            _isObscure2 = !_isObscure2;
-                          });
-                        },
-                      )),
-                  obscureText: _isObscure2,
-                ),
-              ],
+                    controller: passwordController2, // Controller for Password
+                    decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: "Re-enter Password",
+                        contentPadding: EdgeInsets.all(20),
+                        // Adding the visibility icon to toggle visibility of the password field
+                        suffixIcon: IconButton(
+                          icon: Icon(_isObscure2.value
+                              ? Icons.visibility_off
+                              : Icons.visibility),
+                          onPressed: () {
+                            _isObscure2.value = !_isObscure2.value;
+                          },
+                        )),
+                    obscureText: _isObscure2.value,
+                  ),
+                ],
+              ),
             ),
           ),
 
@@ -494,21 +438,42 @@ class _SignupPageContent extends State<SignupPageContent> {
                       auth.insertCredentials(
                           usernameController.text, passwordController1.text);
 
-                      Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(builder: (context) => MyApp()),
-                        (Route<dynamic> route) => false,
+                      Get.snackbar(
+                        "Signup Successful",
+                        "The signup has been successful",
+                        snackPosition: SnackPosition.BOTTOM,
+                        backgroundColor: Colors.blue,
+                        borderRadius: 20,
+                        animationDuration: Duration(milliseconds: 500),
+                        backgroundGradient: LinearGradient(colors: [
+                          Colors.white,
+                          Colors.grey,
+                        ]),
+                        boxShadows: [
+                          BoxShadow(
+                            color: Colors.grey,
+                            offset: Offset(5, 5),
+                            spreadRadius: 5,
+                            blurRadius: 8,
+                          ),
+                        ],
+                        dismissDirection: DismissDirection.horizontal,
+                        duration: Duration(milliseconds: 2000),
+                        icon: Icon(
+                          Icons.thumb_up,
+                        ),
+                        overlayBlur: 0.8,
                       );
+                      Get.offAll(LoginScreen());
                     } else {
-                      setState(() {
-                        returnVisibilityString = "Username already exists";
-                        _isVisible = true;
-                      });
+                      returnVisibilityString.value = "Username already exists";
+                      _isVisible.value = true;
                     }
                   } else {
-                    setState(() {
-                      _isVisible = returnVisibility(passwordController1.text,
-                          passwordController2.text, usernameController.text);
-                    });
+                    _isVisible.value = returnVisibility(
+                        passwordController1.text,
+                        passwordController2.text,
+                        usernameController.text);
                   }
                 }),
           ),
