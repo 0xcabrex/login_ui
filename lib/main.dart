@@ -15,9 +15,28 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-        title: 'Login Demo',
-        defaultTransition: Transition.rightToLeft,
-        home: LoginScreen());
+      title: 'Login Demo',
+      getPages: [
+        GetPage(
+          name: "/",
+          page: () => LoginScreen(),
+        ),
+        GetPage(
+          name: "/login",
+          page: () => LoginScreen(),
+        ),
+        GetPage(
+          name: '/signup',
+          page: () => SignupPage(),
+        ),
+        GetPage(
+          name: '/home',
+          page: () => HomePage(),
+        ),
+      ],
+      defaultTransition: Transition.rightToLeft,
+      home: LoginScreen(),
+    );
   }
 }
 
@@ -142,20 +161,17 @@ class LoginScreen extends StatelessWidget {
               width: 570,
               height: 70,
               padding: EdgeInsets.only(top: 20),
-              child: RaisedButton(
-                  color: Colors.pink,
+              child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.pink,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30)),
+                  ),
                   child: Text("Submit", style: TextStyle(color: Colors.white)),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30)),
                   onPressed: () {
                     if (auth.fetchCredentials(
                         usernameController.text, passwordController.text)) {
-                      // Navigator.pushAndRemoveUntil(
-                      //   context,
-                      //   MaterialPageRoute(builder: (context) => HomePage()),
-                      //   (Route<dynamic> route) => false,
-                      // );
-                      Get.off(HomePage());
+                      Get.offNamed("/home");
                     } else {
                       _isVisible.value = true;
                     }
@@ -179,7 +195,7 @@ class LoginScreen extends StatelessWidget {
                           style: TextStyle(
                               color: Colors.blue, fontWeight: FontWeight.bold),
                           recognizer: new TapGestureRecognizer()
-                            ..onTap = () => {Get.to(SignupPage())}),
+                            ..onTap = () => {Get.toNamed("/signup")}),
                     ],
                   ),
                 )))
@@ -227,13 +243,16 @@ class HomePage extends StatelessWidget {
             height: 100,
             width: 570,
             padding: EdgeInsets.all(20),
-            child: RaisedButton(
-                color: Colors.pink,
+            child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.pink,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30)),
+                  elevation: 2,
+                ),
                 child: Text("Logout", style: TextStyle(color: Colors.white)),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30)),
                 onPressed: () {
-                  Get.off(LoginScreen());
+                  Get.offNamed('/login');
                 }),
           )
         ],
@@ -261,7 +280,6 @@ class SignupPage extends StatelessWidget {
             ),
           )),
     );
-    ;
   }
 }
 
@@ -418,11 +436,13 @@ class SignupPageContent extends StatelessWidget {
             width: 570,
             height: 70,
             padding: EdgeInsets.only(top: 20),
-            child: RaisedButton(
-                color: Colors.pink,
+            child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.pink,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30)),
+                ),
                 child: Text("Submit", style: TextStyle(color: Colors.white)),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30)),
                 onPressed: () async {
                   if (kDebugMode) {
                     print(
@@ -433,7 +453,6 @@ class SignupPageContent extends StatelessWidget {
                       passwordController1.text == passwordController2.text &&
                       passwordController2.text != "" &&
                       auth.isPasswordCompliant(passwordController1.text)) {
-                    print("I got in here");
                     if (!auth.checkUserRepeat(usernameController.text)) {
                       auth.insertCredentials(
                           usernameController.text, passwordController1.text);
@@ -464,7 +483,7 @@ class SignupPageContent extends StatelessWidget {
                         ),
                         overlayBlur: 0.8,
                       );
-                      Get.offAll(LoginScreen());
+                      Get.offAllNamed('/login');
                     } else {
                       returnVisibilityString.value = "Username already exists";
                       _isVisible.value = true;
